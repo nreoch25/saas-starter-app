@@ -1,6 +1,10 @@
+import { Suspense } from "react";
+import { ErrorBoundary } from "react-error-boundary";
+
 import { Heading } from "@/components/heading";
-import { initialTickets } from "@/data";
-import { TicketItem } from "@/features/ticket/components/ticket-item";
+import { Placeholder } from "@/components/placeholder";
+import { Spinner } from "@/components/ui/spinner";
+import { TicketList } from "@/features/ticket/components/ticket-list";
 
 const TicketsPage = () => {
   return (
@@ -10,11 +14,11 @@ const TicketsPage = () => {
         description="All your tickets are listed here"
       />
 
-      <div className="flex-1 flex flex-col items-center gap-y-4 animate-fade-from-top">
-        {initialTickets.map((ticket) => (
-          <TicketItem key={ticket.id} ticket={ticket} />
-        ))}
-      </div>
+      <ErrorBoundary fallback={<Placeholder label="Something went wrong!" />}>
+        <Suspense fallback={<Spinner />}>
+          <TicketList />
+        </Suspense>
+      </ErrorBoundary>
     </div>
   );
 };

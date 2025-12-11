@@ -1,6 +1,7 @@
 import { LucideKanban } from "lucide-react";
 import Link from "next/link";
 
+import { ThemeSwitcher } from "@/components/theme/theme-switcher";
 import { buttonVariants } from "@/components/ui/button";
 import { homePath, ticketsPath } from "@/paths";
 
@@ -14,7 +15,7 @@ const Header = () => {
     w-full flex py-2.5 px-5 justify-between
   "
     >
-      <div>
+      <div className="flex align-items gap-x-2">
         <Link
           href={homePath()}
           className={buttonVariants({ variant: "ghost" })}
@@ -23,7 +24,8 @@ const Header = () => {
           <h1 className="ml-1 text-lg font-semibold">Saas Starter App</h1>
         </Link>
       </div>
-      <div>
+      <div className="flex align-items gap-x-2">
+        <ThemeSwitcher />
         <Link
           href={ticketsPath()}
           className={buttonVariants({ variant: "outline" })}
