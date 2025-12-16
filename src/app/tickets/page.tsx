@@ -1,9 +1,11 @@
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
+import { CardCompact } from "@/components/card-compact";
 import { Heading } from "@/components/heading";
 import { Placeholder } from "@/components/placeholder";
 import { Spinner } from "@/components/ui/spinner";
+import { TicketCreateForm } from "@/features/ticket/components/ticket-create-form";
 import { TicketList } from "@/features/ticket/components/ticket-list";
 
 const TicketsPage = () => {
@@ -12,6 +14,13 @@ const TicketsPage = () => {
       <Heading
         title="Tickets Page"
         description="All your tickets are listed here"
+      />
+
+      <CardCompact
+        title="Create Ticket"
+        description="A new ticket will be created"
+        content={<TicketCreateForm />}
+        className="w-full max-w-[420px] self-center"
       />
 
       <ErrorBoundary fallback={<Placeholder label="Something went wrong!" />}>

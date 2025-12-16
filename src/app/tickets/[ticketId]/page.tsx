@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 
 import { TicketItem } from "@/features/ticket/components/ticket-item";
 import { getTicket } from "@/features/ticket/queries/get-ticket";
+import { getTickets } from "@/features/ticket/queries/get-tickets";
 
 type TicketPageProps = {
   params: Promise<{
@@ -23,5 +24,12 @@ const TicketDetailPage = async ({ params }: TicketPageProps) => {
     </div>
   );
 };
+
+export async function generateStaticParams() {
+  const tickets = await getTickets();
+  return tickets.map((ticket) => ({
+    ticketId: ticket.id,
+  }));
+}
 
 export default TicketDetailPage;
