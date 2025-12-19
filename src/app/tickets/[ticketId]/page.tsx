@@ -1,7 +1,5 @@
 import { notFound } from "next/navigation";
-import { Fragment } from "react";
 
-import { RedirectToast } from "@/components/redirect-toast";
 import { TicketItem } from "@/features/ticket/components/ticket-item";
 import { getTicket } from "@/features/ticket/queries/get-ticket";
 
@@ -20,12 +18,9 @@ const TicketDetailPage = async ({ params }: TicketPageProps) => {
   }
 
   return (
-    <Fragment>
-      <div className="flex justify-center animate-fade-from-top">
-        <TicketItem ticket={ticket} isDetail={true} />
-      </div>
-      <RedirectToast />
-    </Fragment>
+    <div className="flex justify-center animate-fade-from-top">
+      <TicketItem ticket={ticket} isDetail={true} />
+    </div>
   );
 };
 
