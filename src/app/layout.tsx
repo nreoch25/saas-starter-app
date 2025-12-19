@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Header } from "@/components/header";
 import { ThemeProvider } from "@/components/theme/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "The Road to Next",
@@ -30,6 +31,7 @@ export default function RootLayout({
           >
             {children}
           </main>
+          <Toaster expand />
         </ThemeProvider>
       </body>
     </html>
