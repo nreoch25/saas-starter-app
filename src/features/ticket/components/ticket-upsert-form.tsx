@@ -1,8 +1,11 @@
 "use client";
 
-import { useActionState } from "react";
+import { RefObject, useActionState, useRef } from "react";
 
-import { DatePicker } from "@/components/data-picker";
+import {
+  DatePicker,
+  ImperativeHandleFromDatePicker,
+} from "@/components/data-picker";
 import { FieldError } from "@/components/form/field-error";
 import { Form } from "@/components/form/from";
 import { SubmitButton } from "@/components/form/submit-button";
@@ -25,8 +28,15 @@ const TicketUpsertForm = ({ ticket }: TicketUpsertFormProps) => {
     EMPTY_ACTION_STATE
   );
 
+  const datePickerImperativeHandleRef =
+    useRef<ImperativeHandleFromDatePicker>(null);
+
+  const handleSuccess = () => {
+    datePickerImperativeHandleRef.current?.reset();
+  };
+
   return (
-    <Form action={action} actionState={actionState}>
+    <Form action={action} actionState={actionState} onSuccess={handleSuccess}>
       <Label htmlFor="title">Title</Label>
       <Input
         id="title"
@@ -53,6 +63,9 @@ const TicketUpsertForm = ({ ticket }: TicketUpsertFormProps) => {
           <Label htmlFor="deadline">Deadline</Label>
 
           <DatePicker
+            imperativeHandleRef={
+              datePickerImperativeHandleRef as RefObject<ImperativeHandleFromDatePicker>
+            }
             id="deadline"
             name="deadline"
             defaultValue={
