@@ -21,13 +21,11 @@ const eslintConfig = [
         "error",
         {
           groups: [
-            // External packages
+            // External packages (node_modules)
             ["^@?\\w"],
-            // Internal imports (not starting with .)
-            ["^[^.]"],
-            // Relative imports (including side-effect relative imports like CSS)
+            // Relative imports
             ["^\\."],
-            // Side-effect imports (non-relative, should be rare)
+            // Side-effect imports
             ["^\\u0000"],
           ],
         },
