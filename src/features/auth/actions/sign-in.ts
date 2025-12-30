@@ -21,34 +21,28 @@ const signInSchema = z.object({
 
 export const signIn = async (_actionState: ActionState, formData: FormData) => {
   try {
-    const { email, password } = signInSchema.parse(
-      Object.fromEntries(formData)
-    );
+    const { email, password } = signInSchema.parse(Object.fromEntries(formData));
 
     const user = await prisma.user.findUnique({
       where: { email },
     });
 
     if (!user) {
-      return toActionState("ERROR", "Incorrect email or password");
+      return toActionState("ERROR", "Incorrect email or password", formData);
     }
 
     const validPassword = await verify(user.passwordHash, password);
 
     if (!validPassword) {
-      return toActionState("ERROR", "Incorrect email or password");
+      return toActionState("ERROR", "Incorrect email or password", formData);
     }
 
     const session = await lucia.createSession(user.id, {});
     const sessionCookie = lucia.createSessionCookie(session.id);
 
-    (await cookies()).set(
-      sessionCookie.name,
-      sessionCookie.value,
-      sessionCookie.attributes
-    );
+    (await cookies()).set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
   } catch (error) {
-    return fromErrorToActionState(error);
+    return fromErrorToActionState(error, formData);
   }
 
   redirect(ticketsPath());

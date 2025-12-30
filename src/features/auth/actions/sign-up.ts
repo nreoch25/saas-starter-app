@@ -21,10 +21,7 @@ const signUpSchema = z
       .string()
       .min(1, { message: "Username is required" })
       .max(191, { message: "Username must be less than 191 characters" })
-      .refine(
-        (value) => !value.includes(" "),
-        "Username cannot contain spaces"
-      ),
+      .refine((value) => !value.includes(" "), "Username cannot contain spaces"),
     email: z.string().min(1, { message: "Email is required" }).max(191).email(),
     password: z
       .string()
@@ -47,9 +44,7 @@ const signUpSchema = z
 
 export const signUp = async (_actionState: ActionState, formData: FormData) => {
   try {
-    const { username, email, password } = signUpSchema.parse(
-      Object.fromEntries(formData)
-    );
+    const { username, email, password } = signUpSchema.parse(Object.fromEntries(formData));
 
     const passwordHash = await hash(password);
 
@@ -64,23 +59,13 @@ export const signUp = async (_actionState: ActionState, formData: FormData) => {
     const session = await lucia.createSession(user.id, {});
     const sessionCookie = lucia.createSessionCookie(session.id);
 
-    (await cookies()).set(
-      sessionCookie.name,
-      sessionCookie.value,
-      sessionCookie.attributes
-    );
+    (await cookies()).set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
   } catch (error: unknown) {
-    if (
-      error instanceof Prisma.PrismaClientKnownRequestError &&
-      error.code === "P2002"
-    ) {
-      return toActionState(
-        "ERROR",
-        "Either email or username is already in use"
-      );
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+      return toActionState("ERROR", "Either email or username is already in use", formData);
     }
 
-    return fromErrorToActionState(error);
+    return fromErrorToActionState(error, formData);
   }
 
   redirect(ticketsPath());
