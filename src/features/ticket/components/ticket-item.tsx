@@ -1,31 +1,34 @@
 import clsx from "clsx";
-import {
-  LucideMoreVertical,
-  LucidePencil,
-  LucideSquareArrowOutUpRight,
-} from "lucide-react";
+import { LucideMoreVertical, LucidePencil, LucideSquareArrowOutUpRight } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { getAuth } from "@/features/auth/queries/get-auth";
+import { isOwner } from "@/features/auth/utils/is-owner";
 import { TicketMoreMenu } from "@/features/ticket/components/ticket-more-menu";
 import { TICKET_ICONS } from "@/features/ticket/constants";
-import { Ticket } from "@/generated/prisma/client";
+import { Prisma } from "@/generated/prisma/client";
 import { ticketDetailPath, ticketEditPath } from "@/paths";
 import { toCurrencyFromCent } from "@/utils/currency";
 
 type TicketItemProps = {
-  ticket: Ticket;
+  ticket: Prisma.TicketGetPayload<{
+    include: {
+      user: {
+        select: {
+          username: true;
+        };
+      };
+    };
+  }>;
   isDetail?: boolean;
 };
 
-const TicketItem = ({ ticket, isDetail = false }: TicketItemProps) => {
+const TicketItem = async ({ ticket, isDetail = false }: TicketItemProps) => {
+  const { user } = await getAuth();
+  const isTicketOwner = isOwner(user, ticket);
+
   const detailButton = (
     <Button variant="outline" size="icon" asChild>
       <Link prefetch={true} href={ticketDetailPath(ticket.id)}>
@@ -34,15 +37,15 @@ const TicketItem = ({ ticket, isDetail = false }: TicketItemProps) => {
     </Button>
   );
 
-  const editButton = (
+  const editButton = isTicketOwner ? (
     <Button variant="outline" size="icon" asChild>
       <Link prefetch={true} href={ticketEditPath(ticket.id)}>
         <LucidePencil className="w-4 h-4" />
       </Link>
     </Button>
-  );
+  ) : null;
 
-  const moreMenu = (
+  const moreMenu = isTicketOwner ? (
     <TicketMoreMenu
       ticket={ticket}
       trigger={
@@ -51,7 +54,7 @@ const TicketItem = ({ ticket, isDetail = false }: TicketItemProps) => {
         </Button>
       }
     />
-  );
+  ) : null;
 
   return (
     <div
@@ -77,10 +80,10 @@ const TicketItem = ({ ticket, isDetail = false }: TicketItemProps) => {
           </span>
         </CardContent>
         <CardFooter className="flex justify-between">
-          <p className="text-sm text-muted-foreground">{ticket.deadline}</p>
           <p className="text-sm text-muted-foreground">
-            {toCurrencyFromCent(ticket.bounty)}
+            {ticket.deadline} by {ticket.user.username}
           </p>
+          <p className="text-sm text-muted-foreground">{toCurrencyFromCent(ticket.bounty)}</p>
         </CardFooter>
       </Card>
       <div className="flex flex-col gap-y-1">

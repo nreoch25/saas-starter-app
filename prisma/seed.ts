@@ -1,3 +1,4 @@
+import { hash } from "@node-rs/argon2";
 import { PrismaPg } from "@prisma/adapter-pg";
 
 import "dotenv/config";
@@ -10,55 +11,67 @@ const adapter = new PrismaPg({
 
 const prisma = new PrismaClient({ adapter });
 
+const users = [
+  {
+    username: "admin",
+    email: "admin@admin.com",
+  },
+  {
+    username: "nreoch",
+    // use your own email here
+    email: "nigelreoch@hotmail.com",
+  },
+];
+
+const tickets = [
+  {
+    title: "Ticket 1",
+    content: "First ticket from DB.",
+    status: "DONE" as const,
+    deadline: new Date().toISOString().split("T")[0],
+    bounty: 499,
+  },
+  {
+    title: "Ticket 2",
+    content: "Second ticket from DB.",
+    status: "OPEN" as const,
+    deadline: new Date().toISOString().split("T")[0],
+    bounty: 399,
+  },
+  {
+    title: "Ticket 3",
+    content: "Third ticket from DB.",
+    status: "IN_PROGRESS" as const,
+    deadline: new Date().toISOString().split("T")[0],
+    bounty: 599,
+  },
+];
+
 const seed = async () => {
-  try {
-    const t0 = performance.now();
-    
-    // Clear existing data
-    console.log("Deleting existing data...");
-    await prisma.session.deleteMany();
-    await prisma.ticket.deleteMany();
-    await prisma.user.deleteMany();
+  const t0 = performance.now();
+  console.log("DB Seed: Started ...");
 
-    // Seed tickets
-    console.log("Creating tickets...");
-    const tickets = [
-      {
-        title: "Ticket 1",
-        content: "This is the first ticket",
-        status: "DONE" as const,
-        bounty: 499,
-        deadline: new Date().toISOString().split("T")[0],
-      },
-      {
-        title: "Ticket 2",
-        content: "This is the second ticket",
-        status: "OPEN" as const,
-        bounty: 399,
-        deadline: new Date().toISOString().split("T")[0],
-      },
-      {
-        title: "Ticket 3",
-        content: "This is the third ticket",
-        status: "IN_PROGRESS" as const,
-        bounty: 599,
-        deadline: new Date().toISOString().split("T")[0],
-      },
-    ];
+  await prisma.user.deleteMany();
+  await prisma.ticket.deleteMany();
 
-    await prisma.ticket.createMany({
-      data: tickets,
-    });
+  const passwordHash = await hash("abc123");
 
-    console.log("Seeding completed successfully!");
-    console.log(`Created ${tickets.length} tickets`);
-    const t1 = performance.now();
-    console.log(`Seeding completed in ${Math.round(t1 - t0)} milliseconds`);
-    process.exit(0);
-  } catch (error) {
-    console.error("Error seeding database:", error);
-    process.exit(1);
-  }
+  const dbUsers = await prisma.user.createManyAndReturn({
+    data: users.map((user) => ({
+      ...user,
+      passwordHash,
+    })),
+  });
+
+  await prisma.ticket.createMany({
+    data: tickets.map((ticket) => ({
+      ...ticket,
+      userId: dbUsers[0].id,
+    })),
+  });
+
+  const t1 = performance.now();
+  console.log(`DB Seed: Finished (${t1 - t0}ms)`);
 };
 
 seed();
