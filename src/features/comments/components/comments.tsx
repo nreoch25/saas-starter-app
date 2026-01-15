@@ -8,17 +8,28 @@ import { CommentCreateForm } from "@/features/comments/components/comment-create
 import { CommentDeleteButton } from "@/features/comments/components/comment-delete-button";
 import { CommentEditButton } from "@/features/comments/components/comment-edit-button";
 import { CommentItem } from "@/features/comments/components/comment-item";
+import { getComments } from "@/features/comments/queries/get-comments";
 import { CommentWithMetadata } from "@/features/comments/types";
 
 type CommentsProps = {
   ticketId: string;
-  comments?: CommentWithMetadata[];
+  paginatedComments: {
+    list: CommentWithMetadata[];
+    metadata: { count: number; hasNextPage: boolean };
+  };
 };
 
-const Comments = async ({ ticketId, comments = [] }: CommentsProps) => {
-  const handleMore = () => {
-    console.log("More");
+const Comments = ({ ticketId, paginatedComments }: CommentsProps) => {
+  const comments = paginatedComments.list;
+
+  const handleMore = async () => {
+    const morePaginatedComments = await getComments(ticketId);
+    const moreComments = morePaginatedComments.list;
+
+    console.log(moreComments);
+    // TODO: append moreComments to comments
   };
+
   return (
     <Fragment>
       <CardCompact
