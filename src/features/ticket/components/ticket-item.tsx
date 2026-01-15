@@ -15,7 +15,7 @@ import { toCurrencyFromCent } from "@/utils/currency";
 type TicketItemProps = {
   ticket: TicketWithMetadata;
   isDetail?: boolean;
-  comments: ReactNode;
+  comments?: ReactNode;
 };
 
 const TicketItem = async ({ ticket, isDetail, comments }: TicketItemProps) => {

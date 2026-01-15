@@ -1,8 +1,9 @@
-"use server";
+"use client";
 
 import { Fragment } from "react";
 
 import { CardCompact } from "@/components/card-compact";
+import { Button } from "@/components/ui/button";
 import { CommentCreateForm } from "@/features/comments/components/comment-create-form";
 import { CommentDeleteButton } from "@/features/comments/components/comment-delete-button";
 import { CommentEditButton } from "@/features/comments/components/comment-edit-button";
@@ -15,6 +16,9 @@ type CommentsProps = {
 };
 
 const Comments = async ({ ticketId, comments = [] }: CommentsProps) => {
+  const handleMore = () => {
+    console.log("More");
+  };
   return (
     <Fragment>
       <CardCompact
@@ -37,6 +41,11 @@ const Comments = async ({ ticketId, comments = [] }: CommentsProps) => {
             ]}
           />
         ))}
+      </div>
+      <div className="flex flex-col justify-center ml-8">
+        <Button variant="ghost" onClick={handleMore}>
+          More
+        </Button>
       </div>
     </Fragment>
   );
