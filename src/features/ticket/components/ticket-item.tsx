@@ -1,15 +1,13 @@
 import clsx from "clsx";
 import { LucideArrowUpRightFromSquare, LucideMoreVertical, LucidePencil } from "lucide-react";
 import Link from "next/link";
+import { ReactNode } from "react";
 
 import { TICKET_ICONS } from "../constants";
 import { TicketMoreMenu } from "./ticket-more-menu";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { getAuth } from "@/features/auth/queries/get-auth";
-import { isOwner } from "@/features/auth/utils/is-owner";
-import { Comments } from "@/features/comments/components/comments";
 import { TicketWithMetadata } from "@/features/ticket/types";
 import { ticketDetailPath, ticketEditPath } from "@/paths";
 import { toCurrencyFromCent } from "@/utils/currency";
@@ -17,12 +15,10 @@ import { toCurrencyFromCent } from "@/utils/currency";
 type TicketItemProps = {
   ticket: TicketWithMetadata;
   isDetail?: boolean;
+  comments: ReactNode;
 };
 
-const TicketItem = async ({ ticket, isDetail }: TicketItemProps) => {
-  const { user } = await getAuth();
-  const isTicketOwner = isOwner(user, ticket);
-
+const TicketItem = async ({ ticket, isDetail, comments }: TicketItemProps) => {
   const detailButton = (
     <Button variant="outline" size="icon" asChild>
       <Link prefetch href={ticketDetailPath(ticket.id)}>
@@ -31,7 +27,7 @@ const TicketItem = async ({ ticket, isDetail }: TicketItemProps) => {
     </Button>
   );
 
-  const editButton = isTicketOwner ? (
+  const editButton = ticket.isOwner ? (
     <Button variant="outline" size="icon" asChild>
       <Link prefetch href={ticketEditPath(ticket.id)}>
         <LucidePencil className="h-4 w-4" />
@@ -39,7 +35,7 @@ const TicketItem = async ({ ticket, isDetail }: TicketItemProps) => {
     </Button>
   ) : null;
 
-  const moreMenu = isTicketOwner ? (
+  const moreMenu = ticket.isOwner ? (
     <TicketMoreMenu
       ticket={ticket}
       trigger={
@@ -97,7 +93,7 @@ const TicketItem = async ({ ticket, isDetail }: TicketItemProps) => {
         </div>
       </div>
 
-      {isDetail ? <Comments ticketId={ticket.id} /> : null}
+      {comments}
     </div>
   );
 };

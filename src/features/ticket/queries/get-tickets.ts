@@ -1,7 +1,11 @@
+import { getAuth } from "@/features/auth/queries/get-auth";
+import { isOwner } from "@/features/auth/utils/is-owner";
 import { ParsedSearchParams } from "@/features/ticket/search-params";
 import { prisma } from "@/lib/prisma";
 
-const getTickets = async (userId: string | undefined, searchParams: ParsedSearchParams) => {
+export const getTickets = async (userId: string | undefined, searchParams: ParsedSearchParams) => {
+  const { user } = await getAuth();
+
   const where = {
     userId,
     title: {
@@ -35,12 +39,13 @@ const getTickets = async (userId: string | undefined, searchParams: ParsedSearch
   ]);
 
   return {
-    list: tickets,
+    list: tickets.map((ticket) => ({
+      ...ticket,
+      isOwner: isOwner(user, ticket),
+    })),
     metadata: {
       count,
       hasNextPage: count > skip + take,
     },
   };
 };
-
-export { getTickets };
