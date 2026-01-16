@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 
 import { CardCompact } from "@/components/card-compact";
 import { Button } from "@/components/ui/button";
@@ -20,14 +20,33 @@ type CommentsProps = {
 };
 
 const Comments = ({ ticketId, paginatedComments }: CommentsProps) => {
-  const comments = paginatedComments.list;
+  const [comments, setComments] = useState(paginatedComments.list);
+  const [metadata, setMetadata] = useState(paginatedComments.metadata);
 
   const handleMore = async () => {
-    const morePaginatedComments = await getComments(ticketId);
+    const morePaginatedComments = await getComments(ticketId, comments.length);
     const moreComments = morePaginatedComments.list;
 
-    console.log(moreComments);
-    // TODO: append moreComments to comments
+    setComments([...comments, ...moreComments]);
+    setMetadata(morePaginatedComments.metadata);
+  };
+
+  const handleDeleteComment = (id: string) => {
+    setComments((prevComments) => prevComments.filter((comment) => comment.id !== id));
+  };
+
+  const handleUpdateComment = (id: string, content: string) => {
+    setComments((prevComments) =>
+      prevComments.map((comment) => (comment.id === id ? { ...comment, content } : comment))
+    );
+  };
+
+  const handleCreateComment = (comment: CommentWithMetadata | undefined) => {
+    if (!comment) {
+      return;
+    }
+
+    setComments((prevComments) => [comment, ...prevComments]);
   };
 
   return (
@@ -35,7 +54,7 @@ const Comments = ({ ticketId, paginatedComments }: CommentsProps) => {
       <CardCompact
         title="Create Comment"
         description="A new comment will be created"
-        content={<CommentCreateForm ticketId={ticketId} />}
+        content={<CommentCreateForm ticketId={ticketId} onCreateComment={handleCreateComment} />}
       />
       <div className="flex flex-col gap-y-4 ml-8">
         {comments.map((comment) => (
@@ -45,8 +64,17 @@ const Comments = ({ ticketId, paginatedComments }: CommentsProps) => {
             buttons={[
               ...(comment.isOwner
                 ? [
-                    <CommentDeleteButton key="0" id={comment.id} />,
-                    <CommentEditButton key="1" id={comment.id} content={comment.content} />,
+                    <CommentDeleteButton
+                      key="0"
+                      id={comment.id}
+                      onDeleteComment={handleDeleteComment}
+                    />,
+                    <CommentEditButton
+                      key="1"
+                      id={comment.id}
+                      content={comment.content}
+                      onUpdateComment={handleUpdateComment}
+                    />,
                   ]
                 : []),
             ]}
@@ -54,9 +82,11 @@ const Comments = ({ ticketId, paginatedComments }: CommentsProps) => {
         ))}
       </div>
       <div className="flex flex-col justify-center ml-8">
-        <Button variant="ghost" onClick={handleMore}>
-          More
-        </Button>
+        {metadata.hasNextPage && (
+          <Button variant="ghost" onClick={handleMore}>
+            More
+          </Button>
+        )}
       </div>
     </Fragment>
   );

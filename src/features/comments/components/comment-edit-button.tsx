@@ -10,9 +10,10 @@ import { Button } from "@/components/ui/button";
 type CommentEditButtonProps = {
   id: string;
   content: string;
+  onUpdateComment?: (id: string, content: string) => void;
 };
 
-const CommentEditButton = ({ id, content }: CommentEditButtonProps) => {
+const CommentEditButton = ({ id, content, onUpdateComment }: CommentEditButtonProps) => {
   const [editButton, editDialog] = useEditDialog({
     action: updateComment.bind(null, id),
     initialValue: content,
@@ -21,6 +22,9 @@ const CommentEditButton = ({ id, content }: CommentEditButtonProps) => {
         <LucidePencil className="w-4 h-4" />
       </Button>
     ),
+    onSuccess: (updatedContent) => {
+      onUpdateComment?.(id, updatedContent);
+    },
   });
 
   return (

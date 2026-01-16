@@ -28,7 +28,7 @@ export const updateComment = async (id: string, _actionState: ActionState, formD
     });
 
     if (!comment || !isOwner(user, comment)) {
-      return toActionState("ERROR", "Not authorized");
+      return toActionState("ERROR", "Not authorized", formData);
     }
 
     const data = updateCommentSchema.parse(Object.fromEntries(formData));
@@ -44,7 +44,7 @@ export const updateComment = async (id: string, _actionState: ActionState, formD
 
     revalidatePath(ticketDetailPath(comment.ticketId));
 
-    return toActionState("SUCCESS", "Comment updated");
+    return toActionState("SUCCESS", "Comment updated", formData);
   } catch (error) {
     return fromErrorToActionState(error);
   }
