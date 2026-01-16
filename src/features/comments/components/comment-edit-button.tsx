@@ -5,12 +5,14 @@ import { LucidePencil } from "lucide-react";
 import { updateComment } from "../actions/update-comment";
 
 import { useEditDialog } from "@/components/edit-dialog";
+import { ActionState } from "@/components/form/utils/to-action-state";
 import { Button } from "@/components/ui/button";
+import { CommentWithMetadata } from "@/features/comments/types";
 
 type CommentEditButtonProps = {
   id: string;
   content: string;
-  onUpdateComment?: (id: string, content: string) => void;
+  onUpdateComment?: (comment: CommentWithMetadata | undefined) => void;
 };
 
 const CommentEditButton = ({ id, content, onUpdateComment }: CommentEditButtonProps) => {
@@ -22,8 +24,8 @@ const CommentEditButton = ({ id, content, onUpdateComment }: CommentEditButtonPr
         <LucidePencil className="w-4 h-4" />
       </Button>
     ),
-    onSuccess: (updatedContent) => {
-      onUpdateComment?.(id, updatedContent);
+    onSuccess: (actionState: ActionState<CommentWithMetadata | undefined>) => {
+      onUpdateComment?.(actionState.data);
     },
   });
 

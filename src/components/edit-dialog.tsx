@@ -23,7 +23,7 @@ type UseEditDialogProps = {
   action: (prevState: ActionState, formData: FormData) => Promise<ActionState>;
   trigger: ReactElement<{ onClick?: () => void }>;
   initialValue?: string;
-  onSuccess?: (content: string) => void;
+  onSuccess?: (actionState: ActionState) => void;
 };
 
 const useEditDialog = ({
@@ -45,8 +45,7 @@ const useEditDialog = ({
 
   const handleSuccess = (actionState: ActionState) => {
     setIsOpen(false);
-    const content = (actionState.payload?.get("content") as string) ?? "";
-    onSuccess?.(content);
+    onSuccess?.(actionState);
   };
 
   const dialog = (

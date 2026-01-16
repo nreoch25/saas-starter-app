@@ -33,19 +33,29 @@ export const updateComment = async (id: string, _actionState: ActionState, formD
 
     const data = updateCommentSchema.parse(Object.fromEntries(formData));
 
-    await prisma.comment.update({
+    const updatedComment = await prisma.comment.update({
       where: {
         id,
       },
       data: {
         ...data,
       },
+      include: {
+        user: {
+          select: {
+            username: true,
+          },
+        },
+      },
     });
 
     revalidatePath(ticketDetailPath(comment.ticketId));
 
-    return toActionState("SUCCESS", "Comment updated", formData);
+    return toActionState("SUCCESS", "Comment updated", formData, {
+      ...updatedComment,
+      isOwner: isOwner(user, updatedComment),
+    });
   } catch (error) {
-    return fromErrorToActionState(error);
+    return fromErrorToActionState(error, formData);
   }
 };

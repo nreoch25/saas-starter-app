@@ -35,10 +35,12 @@ const Comments = ({ ticketId, paginatedComments }: CommentsProps) => {
     setComments((prevComments) => prevComments.filter((comment) => comment.id !== id));
   };
 
-  const handleUpdateComment = (id: string, content: string) => {
-    setComments((prevComments) =>
-      prevComments.map((comment) => (comment.id === id ? { ...comment, content } : comment))
-    );
+  const handleUpdateComment = (comment: CommentWithMetadata | undefined) => {
+    if (!comment) {
+      return;
+    }
+
+    setComments((prevComments) => prevComments.map((c) => (c.id === comment.id ? comment : c)));
   };
 
   const handleCreateComment = (comment: CommentWithMetadata | undefined) => {
