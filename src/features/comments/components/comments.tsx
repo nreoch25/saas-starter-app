@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useState } from "react";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 
 import { CardCompact } from "@/components/card-compact";
 import { Button } from "@/components/ui/button";
@@ -10,55 +10,57 @@ import { CommentEditButton } from "@/features/comments/components/comment-edit-b
 import { CommentItem } from "@/features/comments/components/comment-item";
 import { getComments } from "@/features/comments/queries/get-comments";
 import { CommentWithMetadata } from "@/features/comments/types";
+import { PaginatedData } from "@/types/pagination";
 
 type CommentsProps = {
   ticketId: string;
-  paginatedComments: {
-    list: CommentWithMetadata[];
-    metadata: { count: number; hasNextPage: boolean };
-  };
+  paginatedComments: PaginatedData<CommentWithMetadata>;
 };
 
+type Cursor = { id: string; createdAt: number } | undefined;
+
 const Comments = ({ ticketId, paginatedComments }: CommentsProps) => {
-  const [comments, setComments] = useState(paginatedComments.list);
-  const [metadata, setMetadata] = useState(paginatedComments.metadata);
+  const queryKey = ["comments", ticketId];
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInfiniteQuery({
+      queryKey,
+      queryFn: ({ pageParam }: { pageParam: Cursor }) =>
+        getComments(ticketId, pageParam),
+      initialPageParam: undefined as Cursor,
+      getNextPageParam: (lastPage) =>
+        lastPage.metadata.hasNextPage ? lastPage.metadata.cursor : undefined,
+      initialData: {
+        pages: [
+          {
+            list: paginatedComments.list,
+            metadata: paginatedComments.metadata,
+          },
+        ],
+        pageParams: [undefined],
+      },
+    });
 
-  const handleMore = async () => {
-    const morePaginatedComments = await getComments(ticketId, comments.length);
-    const moreComments = morePaginatedComments.list;
+  const comments = data.pages.flatMap((page) => page.list);
 
-    setComments([...comments, ...moreComments]);
-    setMetadata(morePaginatedComments.metadata);
-  };
-
-  const handleDeleteComment = (id: string) => {
-    setComments((prevComments) => prevComments.filter((comment) => comment.id !== id));
-  };
-
-  const handleUpdateComment = (comment: CommentWithMetadata | undefined) => {
-    if (!comment) {
-      return;
-    }
-
-    setComments((prevComments) => prevComments.map((c) => (c.id === comment.id ? comment : c)));
-  };
-
-  const handleCreateComment = (comment: CommentWithMetadata | undefined) => {
-    if (!comment) {
-      return;
-    }
-
-    setComments((prevComments) => [comment, ...prevComments]);
-  };
+  const handleMore = () => fetchNextPage();
+  const queryClient = useQueryClient();
+  const handleDeleteComment = () => queryClient.invalidateQueries({ queryKey });
+  const handleCreateComment = () => queryClient.invalidateQueries({ queryKey });
+  const handleUpdateComment = () => queryClient.invalidateQueries({ queryKey });
 
   return (
-    <Fragment>
+    <>
       <CardCompact
         title="Create Comment"
         description="A new comment will be created"
-        content={<CommentCreateForm ticketId={ticketId} onCreateComment={handleCreateComment} />}
+        content={
+          <CommentCreateForm
+            ticketId={ticketId}
+            onCreateComment={handleCreateComment}
+          />
+        }
       />
-      <div className="flex flex-col gap-y-4 ml-8">
+      <div className="flex flex-col gap-y-2 ml-8">
         {comments.map((comment) => (
           <CommentItem
             key={comment.id}
@@ -83,14 +85,19 @@ const Comments = ({ ticketId, paginatedComments }: CommentsProps) => {
           />
         ))}
       </div>
+
       <div className="flex flex-col justify-center ml-8">
-        {metadata.hasNextPage && (
-          <Button variant="ghost" onClick={handleMore}>
+        {hasNextPage && (
+          <Button
+            variant="ghost"
+            onClick={handleMore}
+            disabled={isFetchingNextPage}
+          >
             More
           </Button>
         )}
       </div>
-    </Fragment>
+    </>
   );
 };
 

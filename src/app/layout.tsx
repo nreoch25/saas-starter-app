@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import { Header } from "./_navigation/header";
+import { ReactQueryProvider } from "./_providers/react-query/react-query-provider";
 
 import "./globals.css";
 
@@ -25,6 +26,7 @@ export default function RootLayout({
       <body className="antialiased">
         <NuqsAdapter>
           <ThemeProvider>
+            <ReactQueryProvider>
             <Header />
             <div className="flex h-screen overflow-hidden border-collapse">
               <Sidebar />
@@ -40,8 +42,9 @@ export default function RootLayout({
                 {children}
               </main>
             </div>
-            <Toaster expand />
-          </ThemeProvider>
+                <Toaster expand />
+                </ReactQueryProvider>
+              </ThemeProvider>
         </NuqsAdapter>
       </body>
     </html>

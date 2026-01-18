@@ -5,12 +5,11 @@ import { useEffect, useRef } from "react";
 
 import { Pagination } from "@/components/pagination";
 import { paginationOptions, paginationParser, searchParser } from "@/features/ticket/search-params";
+import { TicketWithMetadata } from "@/features/ticket/types";
+import { PaginatedData } from "@/types/pagination";
 
 type TicketPaginationProps = {
-  paginatedTicketMetadata: {
-    count: number;
-    hasNextPage: boolean;
-  };
+  paginatedTicketMetadata: PaginatedData<TicketWithMetadata>['metadata'];
 };
 
 const TicketPagination = ({ paginatedTicketMetadata }: TicketPaginationProps) => {
