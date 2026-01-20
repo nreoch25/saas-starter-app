@@ -12,8 +12,8 @@ import { ThemeProvider } from "@/components/theme/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
-  title: "The Road to Next",
-  description: "My Road to Next application ...",
+  title: "SAAS Starter App",
+  description: "SAAS Starter App",
 };
 
 export default function RootLayout({
