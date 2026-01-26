@@ -14,13 +14,14 @@ datasource db {
 }
 
 model User {
-  id           String    @id @default(cuid())
-  username     String    @unique
-  email        String    @unique
-  passwordHash String
-  sessions     Session[]
-  tickets      Ticket[]
-  comments     Comment[]
+  id                  String    @id @default(cuid())
+  username            String    @unique
+  email               String    @unique
+  passwordHash        String
+  sessions            Session[]
+  passwordResetTokens PasswordResetToken[]
+  tickets             Ticket[]
+  comments            Comment[]
 }
 
 model Session {
@@ -29,6 +30,15 @@ model Session {
   user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
   userId    String
 
+  @@index([userId])
+}
+
+model PasswordResetToken {
+  tokenHash String   @unique
+  expiresAt DateTime
+  userId    String
+  user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
+  
   @@index([userId])
 }
 
