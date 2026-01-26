@@ -7,11 +7,10 @@ import {
   fromErrorToActionState,
   toActionState,
 } from "@/components/form/utils/to-action-state";
-import { generateRandomToken } from "@/features/auth/utils/crypto";
+import { sendEmailWelcome } from "@/features/auth/emails/send-email-welcome";
 import { hashPassword } from "@/features/auth/utils/hash-and-verify";
-import { setSessionCookie } from "@/features/auth/utils/session-cookie";
+import { createLocalSession } from "@/features/password/utils/create-local-session";
 import { Prisma } from "@/generated/prisma/client";
-import { createSession } from "@/lib/lucia";
 import { prisma } from "@/lib/prisma";
 import { ticketsPath } from "@/paths";
 
@@ -55,11 +54,8 @@ export const signUp = async (_actionState: ActionState, formData: FormData) => {
         passwordHash,
       },
     });
-
-    const sessionToken = generateRandomToken();
-    const session = await createSession(sessionToken, user.id);
-
-    await setSessionCookie(sessionToken, session.expiresAt);
+    await sendEmailWelcome(user.username, user.email);
+    await createLocalSession(user.id);
   } catch (error: unknown) {
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
       return toActionState("ERROR", "Either email or username is already in use", formData);

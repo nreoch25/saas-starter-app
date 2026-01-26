@@ -9,10 +9,9 @@ import {
   fromErrorToActionState,
   toActionState,
 } from "@/components/form/utils/to-action-state";
-import { generateRandomToken, hashToken } from "@/features/auth/utils/crypto";
+import { hashToken } from "@/features/auth/utils/crypto";
 import { hashPassword } from "@/features/auth/utils/hash-and-verify";
-import { setSessionCookie } from "@/features/auth/utils/session-cookie";
-import { createSession } from "@/lib/lucia";
+import { createLocalSession } from "@/features/password/utils/create-local-session";
 import { prisma } from "@/lib/prisma";
 import { ticketsPath } from "@/paths";
 
@@ -83,10 +82,7 @@ export const passwordReset = async (
       },
     });
 
-    const sessionToken = generateRandomToken();
-    const session = await createSession(sessionToken, passwordResetToken.userId);
-
-    await setSessionCookie(sessionToken, session.expiresAt);
+    await createLocalSession(passwordResetToken.userId);
   } catch (error) {
     return fromErrorToActionState(error, formData);
   }

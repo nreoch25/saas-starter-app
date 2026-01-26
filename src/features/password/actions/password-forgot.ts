@@ -2,6 +2,7 @@
 
 import { z } from "zod";
 
+import { sendEmailPasswordReset } from "../emails/send-email-password-reset";
 import { generatePasswordResetLink } from "../utils/generate-password-reset-link";
 
 import {
@@ -29,9 +30,7 @@ export const passwordForgot = async (_actionState: ActionState, formData: FormDa
 
     const passwordResetLink = await generatePasswordResetLink(user.id);
 
-    // TODO: Send email to user with reset password link
-    // instead we will just log the link to the console
-    console.log(passwordResetLink);
+    await sendEmailPasswordReset(user.username, user.email, passwordResetLink);
   } catch (error) {
     return fromErrorToActionState(error, formData);
   }

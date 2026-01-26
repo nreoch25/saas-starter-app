@@ -7,10 +7,8 @@ import {
   fromErrorToActionState,
   toActionState,
 } from "@/components/form/utils/to-action-state";
-import { generateRandomToken } from "@/features/auth/utils/crypto";
 import { verifyPasswordHash } from "@/features/auth/utils/hash-and-verify";
-import { setSessionCookie } from "@/features/auth/utils/session-cookie";
-import { createSession } from "@/lib/lucia";
+import { createLocalSession } from "@/features/password/utils/create-local-session";
 import { prisma } from "@/lib/prisma";
 import { ticketsPath } from "@/paths";
 
@@ -37,10 +35,7 @@ export const signIn = async (_actionState: ActionState, formData: FormData) => {
       return toActionState("ERROR", "Incorrect email or password", formData);
     }
 
-    const sessionToken = generateRandomToken();
-    const session = await createSession(sessionToken, user.id);
-
-    await setSessionCookie(sessionToken, session.expiresAt);
+    await createLocalSession(user.id);
   } catch (error) {
     return fromErrorToActionState(error, formData);
   }
