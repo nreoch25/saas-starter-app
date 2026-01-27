@@ -2,6 +2,7 @@
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
+import { setCookie } from "@/actions/cookies";
 import {
   ActionState,
   fromErrorToActionState,
@@ -68,5 +69,6 @@ export const signUp = async (_actionState: ActionState, formData: FormData) => {
     return fromErrorToActionState(error, formData);
   }
 
+  await setCookie("toast", "Sign up successful");
   redirect(ticketsPath());
 };
