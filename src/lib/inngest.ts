@@ -7,6 +7,6 @@ type Events = {
 };
 
 export const inngest = new Inngest({
-  id: "the-road-to-next",
+  id: "saas-starter-app",
   schemas: new EventSchemas().fromRecord<Events>(),
 });
