@@ -15,11 +15,13 @@ const users = [
   {
     username: "admin",
     email: "admin@admin.com",
+    emailVerified: true,
   },
   {
     username: "nreoch",
     // use your own email here
     email: "nigelreoch@hotmail.com",
+    emailVerified: false,
   },
 ];
 

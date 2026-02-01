@@ -4,6 +4,7 @@ const signUpPath = () => "/sign-up";
 const signInPath = () => "/sign-in";
 const passwordForgotPath = () => "/password-forgot";
 const passwordResetPath = () => "/password-reset";
+export const emailVerificationPath = () => "/email-verification";
 
 const accountProfilePath = () => "/account/profile";
 const accountPasswordPath = () => "/account/password";
@@ -22,6 +23,5 @@ export {
   signUpPath,
   ticketDetailPath,
   ticketEditPath,
-  ticketsPath
+  ticketsPath,
 };
-
