@@ -9,8 +9,8 @@ export type SignupEventArgs = {
 };
 
 export const signupEvent = inngest.createFunction(
-  { id: "signup-emails" },
-  { event: "app/signup.complete" },
+  { id: "signup-welcome-email" },
+  { event: "app/auth.signup" },
   async ({ event, step }) => {
     const { userId } = event.data;
 

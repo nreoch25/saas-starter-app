@@ -5,7 +5,7 @@ import { PasswordResetEventArgs } from "@/features/password/events/event-passwor
 
 type Events = {
   "app/password.password-reset": PasswordResetEventArgs;
-  "app/signup.complete": SignupEventArgs;
+  "app/auth.signup": SignupEventArgs;
 };
 
 export const inngest = new Inngest({

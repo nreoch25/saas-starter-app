@@ -8,11 +8,10 @@ import {
   fromErrorToActionState,
   toActionState,
 } from "@/components/form/utils/to-action-state";
-import { sendEmailVerification } from "@/features/auth/emails/send-email-verification";
-import { generateEmailVerificationCode } from "@/features/auth/utils/generate-email-verification-code";
 import { hashPassword } from "@/features/auth/utils/hash-and-verify";
 import { createLocalSession } from "@/features/password/utils/create-local-session";
 import { Prisma } from "@/generated/prisma/client";
+import { inngest } from "@/lib/inngest";
 import { prisma } from "@/lib/prisma";
 import { ticketsPath } from "@/paths";
 
@@ -57,8 +56,12 @@ export const signUp = async (_actionState: ActionState, formData: FormData) => {
       },
     });
 
-    const verificationCode = await generateEmailVerificationCode(user.id, email);
-    await sendEmailVerification(username, email, verificationCode);
+    await inngest.send({
+      name: "app/auth.signup",
+      data: {
+        userId: user.id,
+      },
+    });
     await createLocalSession(user.id);
   } catch (error: unknown) {
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {

@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "concurrently -n next,email,prisma \"npm run dev:next\" \"npm run email\" \"npm run prisma-studio\"",
+    "dev:next": "next dev -p 3000",
     "dev:inngest": "npx --ignore-scripts=false inngest-cli@latest dev",
     "build": "next build",
     "start": "next start",
@@ -13,8 +14,8 @@
     "postinstall": "prisma generate",
     "seed": "tsx prisma/seed.ts",
     "prisma-db-update": "prisma db push && prisma generate",
-    "prisma-studio": "prisma studio",
-    "email": "email dev --dir src/emails"
+    "prisma-studio": "prisma studio --port 3001",
+    "email": "email dev --dir src/emails -p 3002"
   },
   "dependencies": {
     "@node-rs/argon2": "^2.0.2",
@@ -68,6 +69,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/zxcvbn": "^4.4.5",
+    "concurrently": "^9.2.1",
     "eslint": "^9",
     "eslint-config-next": "15.3.6",
     "eslint-plugin-simple-import-sort": "^12.1.1",
