@@ -1,11 +1,12 @@
+import { LucidePlus } from "lucide-react";
+import Link from "next/link";
+import { Suspense } from "react";
+
 import { Heading } from "@/components/heading";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { OrganizationList } from "@/features/organization/components/organization-list";
 import { organizationCreatePath } from "@/paths";
-import { LucidePlus } from "lucide-react";
-import Link from "next/link";
-import { Suspense } from "react";
 
 const OrganizationsPage = async () => {
   return (
