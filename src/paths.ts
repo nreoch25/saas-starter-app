@@ -6,6 +6,11 @@ const passwordForgotPath = () => "/password-forgot";
 const passwordResetPath = () => "/password-reset";
 export const emailVerificationPath = () => "/email-verification";
 
+const onboardingPath = () => "/onboarding";
+
+const organizationsPath = () => "/organization";
+const organizationCreatePath = () => "/organization/create";
+
 const accountProfilePath = () => "/account/profile";
 const accountPasswordPath = () => "/account/password";
 
@@ -17,6 +22,9 @@ export {
   accountPasswordPath,
   accountProfilePath,
   homePath,
+  onboardingPath,
+  organizationCreatePath,
+  organizationsPath,
   passwordForgotPath,
   passwordResetPath,
   signInPath,

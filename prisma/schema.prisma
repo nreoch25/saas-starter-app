@@ -5,12 +5,34 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider   = "prisma-client"
+  output     = "../src/generated/prisma"
+  engineType = "client"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+model Organization {
+  id          String       @id @default(cuid())
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  name        String
+  memberships Membership[]
+}
+
+model Membership {
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String
+
+  joinedAt DateTime @default(now())
+
+  @@id([organizationId, userId])
+  @@index([organizationId])
+  @@index([userId])
 }
 
 model User {
@@ -22,6 +44,7 @@ model User {
   sessions                Session[]
   passwordResetTokens     PasswordResetToken[]
   emailVerificationTokens EmailVerificationToken[]
+  memberships             Membership[]
   tickets                 Ticket[]
   comments                Comment[]
 }
