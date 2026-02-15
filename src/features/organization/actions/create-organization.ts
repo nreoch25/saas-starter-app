@@ -29,6 +29,7 @@ export const createOrganization = async (_actionState: ActionState, formData: Fo
         memberships: {
           create: {
             userId: user.id,
+            isActive: false,
           },
         },
       },
