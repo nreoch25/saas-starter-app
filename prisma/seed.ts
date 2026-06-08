@@ -21,7 +21,7 @@ const users = [
     username: "nreoch",
     // use your own email here
     email: "nigelreoch@hotmail.com",
-    emailVerified: false,
+    emailVerified: true,
   },
 ];
 

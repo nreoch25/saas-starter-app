@@ -10,7 +10,9 @@ import { prisma } from "@/lib/prisma";
 import { organizationsPath } from "@/paths";
 
 export const switchOrganization = async (organizationId: string) => {
-  const { user } = await getAuthOrRedirect();
+  const { user } = await getAuthOrRedirect({
+    checkActiveOrganization: false,
+  });
 
   try {
     const organizations = await getOrganizationsByUser();

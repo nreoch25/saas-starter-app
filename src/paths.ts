@@ -10,6 +10,8 @@ const onboardingPath = () => "/onboarding";
 
 const organizationsPath = () => "/organization";
 const organizationCreatePath = () => "/organization/create";
+const selectActiveOrganizationPath = () =>
+  "/onboarding/select-active-organization";
 
 const accountProfilePath = () => "/account/profile";
 const accountPasswordPath = () => "/account/password";
@@ -24,6 +26,7 @@ export {
   homePath,
   onboardingPath,
   organizationCreatePath,
+  selectActiveOrganizationPath,
   organizationsPath,
   passwordForgotPath,
   passwordResetPath,

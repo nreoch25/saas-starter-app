@@ -20,15 +20,26 @@ const emailVerificationSchema = z.object({
   code: z.string().length(8),
 });
 
-export const emailVerification = async (_actionState: ActionState, formData: FormData) => {
-  const { user } = await getAuthOrRedirect({ checkEmailVerified: false, checkOrganization: false });
+export const emailVerification = async (
+  _actionState: ActionState,
+  formData: FormData,
+) => {
+  const { user } = await getAuthOrRedirect({
+    checkEmailVerified: false,
+    checkOrganization: false,
+    checkActiveOrganization: false,
+  });
 
   try {
     const { code } = emailVerificationSchema.parse({
       code: formData.get("code"),
     });
 
-    const validCode = await validateEmailVerificationCode(user.id, user.email, code);
+    const validCode = await validateEmailVerificationCode(
+      user.id,
+      user.email,
+      code,
+    );
 
     if (!validCode) {
       return toActionState("ERROR", "Invalid or expired code");
