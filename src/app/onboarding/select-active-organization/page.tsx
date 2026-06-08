@@ -2,9 +2,10 @@ import { LucidePlus } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
+
 import { Heading } from "@/components/heading";
-import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { OrganizationList } from "@/features/organization/components/organization-list";
 import { getOrganizationsByUser } from "@/features/organization/queries/get-organizations-by-user";
 import { onboardingPath, organizationsPath } from "@/paths";

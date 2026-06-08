@@ -23,6 +23,8 @@ const eslintConfig = [
           groups: [
             // External packages (node_modules)
             ["^@?\\w"],
+            // Internal alias imports
+            ["^@/"],
             // Relative imports
             ["^\\."],
             // Side-effect imports

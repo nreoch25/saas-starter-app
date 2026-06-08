@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+
 import { getOrganizationsByUser } from "@/features/organization/queries/get-organizations-by-user";
 import {
   emailVerificationPath,
@@ -6,6 +7,7 @@ import {
   selectActiveOrganizationPath,
   signInPath,
 } from "@/paths";
+
 import { getAuth } from "./get-auth";
 
 type GetAuthOrRedirectOptions = {

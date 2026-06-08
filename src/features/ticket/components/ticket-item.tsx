@@ -3,14 +3,14 @@ import { LucideArrowUpRightFromSquare, LucideMoreVertical, LucidePencil } from "
 import Link from "next/link";
 import { ReactNode } from "react";
 
-import { TICKET_ICONS } from "../constants";
-import { TicketMoreMenu } from "./ticket-more-menu";
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { TicketWithMetadata } from "@/features/ticket/types";
 import { ticketDetailPath, ticketEditPath } from "@/paths";
 import { toCurrencyFromCent } from "@/utils/currency";
+
+import { TICKET_ICONS } from "../constants";
+import { TicketMoreMenu } from "./ticket-more-menu";
 
 type TicketItemProps = {
   ticket: TicketWithMetadata;

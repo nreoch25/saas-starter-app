@@ -2,12 +2,12 @@
 
 import { revalidatePath } from "next/cache";
 
-import { getOrganizationsByUser } from "../queries/get-organizations-by-user";
-
 import { fromErrorToActionState, toActionState } from "@/components/form/utils/to-action-state";
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
 import { prisma } from "@/lib/prisma";
 import { organizationsPath } from "@/paths";
+
+import { getOrganizationsByUser } from "../queries/get-organizations-by-user";
 
 export const switchOrganization = async (organizationId: string) => {
   const { user } = await getAuthOrRedirect({

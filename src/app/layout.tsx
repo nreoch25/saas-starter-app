@@ -2,14 +2,14 @@ import type { Metadata } from "next";
 // import localFont from "next/font/local";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
+import { Sidebar } from "@/app/_navigation/sidebar/components/sidebar";
+import { ThemeProvider } from "@/components/theme/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
+
 import { Header } from "./_navigation/header";
 import { ReactQueryProvider } from "./_providers/react-query/react-query-provider";
 
 import "./globals.css";
-
-import { Sidebar } from "@/app/_navigation/sidebar/components/sidebar";
-import { ThemeProvider } from "@/components/theme/theme-provider";
-import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "SAAS Starter App",

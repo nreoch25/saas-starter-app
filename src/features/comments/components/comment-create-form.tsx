@@ -2,14 +2,14 @@
 
 import { useActionState } from "react";
 
-import { createComment } from "../actions/create-comment";
-
 import { FieldError } from "@/components/form/field-error";
 import { Form } from "@/components/form/form";
 import { SubmitButton } from "@/components/form/submit-button";
 import { ActionState, EMPTY_ACTION_STATE } from "@/components/form/utils/to-action-state";
 import { Textarea } from "@/components/ui/textarea";
 import { CommentWithMetadata } from "@/features/comments/types";
+
+import { createComment } from "../actions/create-comment";
 
 type CommentCreateFormProps = {
   ticketId: string;

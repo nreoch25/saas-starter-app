@@ -1,7 +1,5 @@
 import { cloneElement, ReactElement, useActionState, useState } from "react";
 
-import { SubmitButton } from "./form/submit-button";
-
 import { FieldError } from "@/components/form/field-error";
 import { Form } from "@/components/form/form";
 import { ActionState, EMPTY_ACTION_STATE } from "@/components/form/utils/to-action-state";
@@ -16,6 +14,8 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Textarea } from "@/components/ui/textarea";
+
+import { SubmitButton } from "./form/submit-button";
 
 type UseEditDialogProps = {
   title?: string;

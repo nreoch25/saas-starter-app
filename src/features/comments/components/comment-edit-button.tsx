@@ -2,12 +2,12 @@
 
 import { LucidePencil } from "lucide-react";
 
-import { updateComment } from "../actions/update-comment";
-
 import { useEditDialog } from "@/components/edit-dialog";
 import { ActionState } from "@/components/form/utils/to-action-state";
 import { Button } from "@/components/ui/button";
 import { CommentWithMetadata } from "@/features/comments/types";
+
+import { updateComment } from "../actions/update-comment";
 
 type CommentEditButtonProps = {
   id: string;

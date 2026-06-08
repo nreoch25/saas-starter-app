@@ -3,8 +3,6 @@
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
-import { getAuthOrRedirect } from "../queries/get-auth-or-redirect";
-
 import { setCookie } from "@/actions/cookies";
 import {
   ActionState,
@@ -15,6 +13,8 @@ import { validateEmailVerificationCode } from "@/features/auth/utils/validate-em
 import { createLocalSession } from "@/features/password/utils/create-local-session";
 import { prisma } from "@/lib/prisma";
 import { ticketsPath } from "@/paths";
+
+import { getAuthOrRedirect } from "../queries/get-auth-or-redirect";
 
 const emailVerificationSchema = z.object({
   code: z.string().length(8),

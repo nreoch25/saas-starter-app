@@ -1,8 +1,8 @@
-import { sendEmailVerification } from "../emails/send-email-verification";
-
 import { generateEmailVerificationCode } from "@/features/auth/utils/generate-email-verification-code";
 import { inngest } from "@/lib/inngest";
 import { prisma } from "@/lib/prisma";
+
+import { sendEmailVerification } from "../emails/send-email-verification";
 
 export const emailVerificationEvent = inngest.createFunction(
   { id: "email-verification" },
